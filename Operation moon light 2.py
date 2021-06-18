@@ -5,8 +5,7 @@ from pygame.locals import*
 
 # Inicio el juego.
 pygame.init()
-#Aquí se empieza a programar
-#prueba 1
+
 
 # Defino el control de audio del juego, esta es una función de pygame que permite establecer las frecuencias, canales, 
 # profundidad de bits y el buffer del audio que vamos a reproducir, los valores los están asignado por defecto.
@@ -164,8 +163,8 @@ class Jugador1(pygame.sprite.Sprite):
         # A continuación defino la vida del jugador #1 de panera que si esta es mayor a 0 aparezca en pantalla y retorno que fin del juego = 0 (o sea que el juego aún no termina), si no, 
         # en el momento que la vida sea menor o igual a 0 añado una animación de explosión a mi nave, reproduzco un sonido de explosión y retorno fin del juego = -1, lo que quiere decir que perdió.
         if self.vida_restante > 0:
-            dibujar_texto("Vida: " + str(self.vida_restante), fuente30, verde, int(ventana_alto / 2 - 40), int(760))
-            dibujar_texto(str(self.nombre), fuente30, verde, int(ventana_alto / 2 -210), int(760))
+            dibujar_texto("Vida: " + str(self.vida_restante), fuente30, verde, int(ventana_alto / 2 - 70), int(760))
+            dibujar_texto(str(self.nombre), fuente30, verde, int(ventana_alto / 2 -230), int(760))
         elif self.vida_restante <= 0:
             exp = Explosion2(self.rect.centerx, self.rect.centery)
             explosion_group.add(exp)
@@ -892,7 +891,7 @@ class Niveles():
                     # Dibujo el tiempo transcurrido.
                     dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
                     #dibujo el nombre del jugador
-                    dibujar_texto("Score: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 65), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
                     #with open(Menus(self)) as v:
                     #dibujar_texto("" + str(nombre_jugador),fuente30,verde,int(ventana_alto/2 -350,790))
                     fin_del_juego = jugador1.update()
@@ -1122,7 +1121,7 @@ class Niveles():
                     
                     # Dibujo el tiempo transcurrido.
                     dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
-                    dibujar_texto("Score: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 65), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
                     fin_del_juego = jugador1.update()
                     # Defino el estado del enemigo. Si tiene vida que se actualice, si no entonces el jugador ganó. (fin_del juego = 1)
                     
@@ -1344,7 +1343,7 @@ class Niveles():
                     
                     # Dibujo el tiempo transcurrido.
                     dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
-                    dibujar_texto("Score: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 65), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
                     fin_del_juego = jugador1.update()
                     # Defino el estado del enemigo. Si tiene vida que se actualice, si no entonces el jugador ganó. (fin_del juego = 1)
                     
