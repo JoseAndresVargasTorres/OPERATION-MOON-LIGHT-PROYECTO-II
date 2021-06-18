@@ -20,7 +20,7 @@ menu_principal = vlc.MediaPlayer("canciones\pantallainicio.mp3")
 nivel_1= vlc.MediaPlayer("canciones/nivel1.mp3")
 nivel_2= vlc.MediaPlayer("canciones/nivel2.mp3")
 nivel_3 = vlc.MediaPlayer("canciones/nivel3.mp3")
-
+#José Andrés Configuró los sonidos
 
 # Cargo los efectos de sonido a una variable y les reducí el sonido a un volumen agradable.
 explosion1_efecto = pygame.mixer.Sound(f"efectos\explosion2.mp3")
