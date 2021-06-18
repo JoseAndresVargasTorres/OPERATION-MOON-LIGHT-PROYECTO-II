@@ -6,7 +6,7 @@ from pygame.locals import*
 # Inicio el juego.
 pygame.init()
 #Aquí se empieza a programar
-
+#prueba 1
 
 # Defino el control de audio del juego, esta es una función de pygame que permite establecer las frecuencias, canales, 
 # profundidad de bits y el buffer del audio que vamos a reproducir, los valores los están asignado por defecto.
