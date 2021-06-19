@@ -1483,4 +1483,9 @@ class Niveles():
             self.nuevo_record()
 
 
+estado_menus = Menus()
+estado_juego = Niveles()
 
+# A continuación utilizo un ciclo while para mantener la aplicación corriendo en todo momento, hasta que el usuario decida salirse.
+corriendo = True
+while corriendo:
