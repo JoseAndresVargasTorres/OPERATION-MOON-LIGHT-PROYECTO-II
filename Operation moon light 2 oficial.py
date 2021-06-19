@@ -642,3 +642,146 @@ class Menus():
             self.puntajes()
         if self.estado == "nombres":
             self.nombres()
+
+
+# Defino una clase que se encarga de reproducir el nivel selecionado y de cambiar de nivel.
+class Niveles():
+    def __init__(self):
+        # Primero defino que esta función selecionadora de nivel comience por la pantalla inicio.
+        self.estado = "Nivel1"
+
+    # Cuando la función que selecióna el nivel o la pantalla esta "x" estado, reproduce el contenido de la función con dicho nombre
+    # A continuación defino una pantalla para salir, pantalla a la que sera redirigido el jugador cada vez que muera.
+    def salir(self):
+        iniciar = True
+        x = 0
+        while iniciar == True:
+            actualizacion.tick(fps)
+            if x > 23:
+                x = 0
+            x += 1
+            if jugador1.score < 0:
+                jugador1.score = 0
+            # Ya mencionado...
+            cursor1.update()
+            dibujar_fondo_p(x)
+            dibujar_texto("Fin del juego :(", fuente40, blanco, int(ventana_alto / 2 - 240), 100)
+            dibujar_texto("Puntaje: " + str(jugador1.score), fuente40, amarillo_verde, int(ventana_alto / 2 - 195), 150)
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            salir = pygame.image.load("img\salir.png")
+            boton1 = Boton(volver1, volver2, 20, 10)
+            boton1.update(ventana, cursor1)
+            boton2 = Boton(salir, salir, 160, 300)
+            boton2.update(ventana, cursor1)
+
+            # Eventos.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton2.rect):
+
+                        pygame.quit()
+                        sys.exit()
+                    elif cursor1.colliderect(boton1.rect):
+                        jugador1.score = 0
+                        jugador1.vida_restante = jugador1.vida_inicio
+                        jugador1.posición = 1
+                        jugador_group1.empty()
+                        meteoros_group.empty()
+                        estado_juego.estado = "Nivel1"
+                        iniciar = False
+                        return main(False)
+
+            pygame.display.update()
+
+    def nuevo_record(self):
+        iniciar = True
+        x = 0
+        while iniciar == True:
+            actualizacion.tick(fps)
+            if x > 23:
+                x = 0
+            x += 1
+            # Ya mencionado...
+            cursor1.update()
+            dibujar_fondo_p(x)
+            dibujar_texto("¡¡¡NUEVO RECORD!!!", fuente40, verde, int(ventana_alto / 2 - 290), 100)
+            dibujar_texto("Puntaje: " + str(jugador1.score), fuente40, amarillo_verde, int(ventana_alto / 2 - 195), 150)
+            dibujar_texto("Posición: " + str(jugador1.posición), fuente40, amarillo, int(ventana_alto / 2 - 195), 200)
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            salir = pygame.image.load("img\salir.png")
+            boton1 = Boton(volver1, volver2, 20, 10)
+            boton1.update(ventana, cursor1)
+            boton2 = Boton(salir, salir, 170, 400)
+            boton2.update(ventana, cursor1)
+
+            # Eventos.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton2.rect):
+                        pygame.quit()
+                        sys.exit()
+                    elif cursor1.colliderect(boton1.rect):
+                        jugador1.score = 0
+                        jugador1.vida_restante = jugador1.vida_inicio
+                        jugador1.posición = 1
+                        jugador_group1.empty()
+                        meteoros_group.empty()
+                        estado_juego.estado = "Nivel1"
+                        iniciar = False
+                        return main(False)
+
+            pygame.display.update()
+
+    def ganaste(self):
+        iniciar = True
+        x = 0
+        while iniciar == True:
+            actualizacion.tick(fps)
+            if x > 23:
+                x = 0
+            x += 1
+            # Ya mencionado...
+            cursor1.update()
+            dibujar_fondo_p(x)
+            dibujar_texto("GANASTE!!! :D", fuente40, blanco, int(ventana_alto / 2 - 220), 100)
+            dibujar_texto("Puntaje: " + str(jugador1.score), fuente40, amarillo_verde, int(ventana_alto / 2 - 195), 150)
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            salir = pygame.image.load("img\salir.png")
+            boton1 = Boton(volver1, volver2, 20, 10)
+            boton1.update(ventana, cursor1)
+            boton2 = Boton(salir, salir, 170, 400)
+            boton2.update(ventana, cursor1)
+
+            # Eventos.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton2.rect):
+                        pygame.quit()
+                        sys.exit()
+                    elif cursor1.colliderect(boton1.rect):
+                        jugador1.score = 0
+                        jugador1.vida_restante = jugador1.vida_inicio
+                        jugador1.posición = 1
+                        jugador_group1.empty()
+                        meteoros_group.empty()
+                        estado_juego.estado = "Nivel1"
+                        menu_principal.play()
+                        iniciar = False
+                        save = open("records.txt", "a")
+                        save.write("")
+                        save.close()
+                        return main(False)
+
+            pygame.display.update()
