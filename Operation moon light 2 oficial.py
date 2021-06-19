@@ -165,3 +165,116 @@ class Jugador1(pygame.sprite.Sprite):
             self.rect.y -= velocidad
         if tecla[pygame.K_s] and self.rect.bottom < ventana_alto - 50:
             self.rect.y += velocidad
+        # Creo una máscara de los pixeles de la nave, esta mascara me crea una forma igual a la imagen de mi nave, forma que luego utilizaré para las colisiones, de esta manera aunque mi imagen tenga unas dimensiones
+        # si la bala enemiga no entra en contacto con los pixeles pintados de la imagen, esta no causa daño, así logro que la bala de verdad colisione con mi nave cuando debe.
+        self.mask = pygame.mask.from_surface(self.image)
+
+        # A continuación defino la vida del jugador #1 de panera que si esta es mayor a 0 aparezca en pantalla y retorno que fin del juego = 0 (o sea que el juego aún no termina), si no,
+        # en el momento que la vida sea menor o igual a 0 añado una animación de explosión a mi nave, reproduzco un sonido de explosión y retorno fin del juego = -1, lo que quiere decir que perdió.
+        if self.vida_restante > 0:
+            dibujar_texto("Vida: " + str(self.vida_restante), fuente30, verde, int(ventana_alto / 2 - 40), int(760))
+            dibujar_texto(str(self.nombre), fuente30, verde, int(ventana_alto / 2 - 210), int(760))
+        elif self.vida_restante <= 0:
+            exp = Explosion2(self.rect.centerx, self.rect.centery)
+            explosion_group.add(exp)
+            explosion1_efecto.play()
+            fin_del_juego = -1
+
+        return fin_del_juego
+
+
+# Defino la animación de explosión como una clase basada en un sprite.
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        # Defino una lista que me servirá para imprimir cada elemento de la lista, de manera que añadiendo cada imagen a la lista, esta se imprima luego de la anterior, dando el efecto animado.
+        self.imagenes = []
+        # A continuación simplemente le asigno una variable a cada imagen de la animación. (Imagenes de la animación tomadas de Coding With Russ)
+        img1 = pygame.image.load(f"img\Animaciones\exp1.png")
+        img2 = pygame.image.load(f"img\Animaciones\exp2.png")
+        img3 = pygame.image.load(f"img\Animaciones\exp3.png")
+        img4 = pygame.image.load(f"img\Animaciones\exp4.png")
+        img5 = pygame.image.load(f"img\Animaciones\exp5.png")
+        # Añado cada imagen a la lista de la animación
+        self.imagenes.append(img1)
+        self.imagenes.append(img2)
+        self.imagenes.append(img3)
+        self.imagenes.append(img4)
+        self.imagenes.append(img5)
+        # Defino un indice que irá cambiando, y este será quien defina que imagen dibujar en pantalla.
+        self.indice = 0
+        # Defino una variable imagen la cual es igual a la imagen que se encuentra en la posición del indice, índice que luego al actualizarse va a ir cambiando.
+        self.image = self.imagenes[self.indice]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        # Este contador se va encargar de controlar la velocidad a la que cambia la imagen que se este dibujando en ese momento.(imagen del grupo de imagenes de la explosión)
+        self.contador = 0
+
+    def update(self):
+        # Defino una variable que me ayudara a controlar la velocidad de la animación.
+        velocidad_explosion = 4
+        # Le sumo 1 al contador de manera que en algun momento este sea mayor a la velocidad, y cada vez que esto pase se va a pintar una imagen diferente.
+        self.contador += 1
+        if self.contador >= velocidad_explosion and self.indice < len(self.imagenes) - 1:
+            self.contador = 0
+            self.indice += 1
+            self.image = self.imagenes[self.indice]
+
+        # Cuando la animación se completa, eliminamos la animación de explosión.
+        if self.indice >= len(self.imagenes) - 1 and self.contador >= velocidad_explosion:
+            self.kill()
+
+
+# A continuación hice exactamente lo mismo pero con imagenes de explosión más grandes, esto debido a que podría haberlo hecho en una sola clase pero no se por qué motivo pygame no me detectaba la funcion pygame.transform.scale
+class Explosion2(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.imagenes = []
+        img1 = pygame.image.load(f"img\Animaciones\expg1.png")
+        img2 = pygame.image.load(f"img\Animaciones\expg2.png")
+        img3 = pygame.image.load(f"img\Animaciones\expg3.png")
+        img4 = pygame.image.load(f"img\Animaciones\expg4.png")
+        img5 = pygame.image.load(f"img\Animaciones\expg5.png")
+        # Añado la imagen a la lista de la animación
+        self.imagenes.append(img1)
+        self.imagenes.append(img2)
+        self.imagenes.append(img3)
+        self.imagenes.append(img4)
+        self.imagenes.append(img5)
+        self.indice = 0
+        self.image = self.imagenes[self.indice]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.contador = 0
+
+    def update(self):
+        velocidad_explosion = 4
+        # Cambio la velocidad de la animación
+        self.contador += 1
+
+        if self.contador >= velocidad_explosion and self.indice < len(self.imagenes) - 1:
+            self.contador = 0
+            self.indice += 1
+            self.image = self.imagenes[self.indice]
+
+        # Cuando la animación se completa, eliminamos la explosión
+        if self.indice >= len(self.imagenes) - 1 and self.contador >= velocidad_explosion:
+            self.kill()
+
+
+# En la siguiente clase defino los botones, de manera que estos tengan 2 imagenes, una cuando el mouse está sobre ellos y otra cuando el mouse no lo está.
+class Boton(pygame.sprite.Sprite):
+    def __init__(self, imagen1, imagen2, x=ventana_ancho / 2 - 15, y=ventana_alto / 2 - 200):
+        self.imagen_normal = imagen1
+        self.imagen_seleccion = imagen2
+        self.imagen_actual = self.imagen_normal
+        self.rect = self.imagen_actual.get_rect()
+        self.rect.left, self.rect.top = (x, y)
+
+    def update(self, ventana, cursor):
+
+        if cursor.colliderect(self.rect):
+            self.imagen_actual = self.imagen_seleccion
+        else:
+            self.imagen_actual = self.imagen_normal
+        ventana.blit(self.imagen_actual, self.rect)
