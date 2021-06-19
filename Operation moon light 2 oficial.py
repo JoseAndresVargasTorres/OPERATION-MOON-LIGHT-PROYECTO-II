@@ -4,7 +4,7 @@ import pygame, sys, random, vlc
 from pygame import mixer
 from pygame.locals import *
 
-# Inicio el juego.
+# Inicio el juego.0M
 pygame.init()
 
 # Defino el control de audio del juego, esta es una función de pygame que permite establecer las frecuencias, canales,
