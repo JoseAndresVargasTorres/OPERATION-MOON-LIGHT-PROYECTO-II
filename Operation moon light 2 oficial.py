@@ -1489,3 +1489,6 @@ estado_juego = Niveles()
 # A continuación utilizo un ciclo while para mantener la aplicación corriendo en todo momento, hasta que el usuario decida salirse.
 corriendo = True
 while corriendo:
+    def main(niveles):
+        if niveles == False:
+            estado_menus.cambiar_menu()
