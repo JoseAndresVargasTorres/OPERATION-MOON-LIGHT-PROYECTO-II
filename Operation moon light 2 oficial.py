@@ -1,5 +1,5 @@
 #Operation moon light
-from QuickSort import *
+from Quicksort import *
 import pygame, sys, random, vlc
 from pygame import mixer
 from pygame.locals import *
