@@ -462,3 +462,183 @@ class Menus():
             else:
                 color = rojo
             pygame.display.update()
+
+    # A continuación defino la pantalla complementaria o About.
+    def complementaria(self):
+        iniciar = True
+        while iniciar == True:
+            actualizacion.tick(fps)
+
+            # A continuación llamo las funciones necesarias para dibujar el fondo, dibujar el título de la pantalla, actualizar la posición detectada del mouse y además asigno imagenes a unas variables que luego utilizaré para los botones.
+            cursor1.update()
+            dibujar_fondo2()
+            dibujar_titulo_comp()
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            # Lo siguiente son llamados a la función dibujar texto. Función ya explicada anteriormente...
+            dibujar_texto("País de producción:", fuente20, blanco, int(ventana_alto / 2 - 300), 120)
+            dibujar_texto("Costa Rica", fuente20, blanco, int(ventana_alto / 2 - 300), 150)
+            dibujar_texto("Universidad y carrera:", fuente20, blanco, int(ventana_alto / 2 - 300), 200)
+            dibujar_texto("Instituto Tecnológico de Costa Rica", fuente20, blanco, int(ventana_alto / 2 - 300), 230)
+            dibujar_texto("Ingeniería en Computadores", fuente20, blanco, int(ventana_alto / 2 - 300), 260)
+            dibujar_texto("Asignatura:", fuente20, blanco, int(ventana_alto / 2 - 300), 305)
+            dibujar_texto("Taller de Programación", fuente20, blanco, int(ventana_alto / 2 - 300), 335)
+            dibujar_texto("Año 2021", fuente20, blanco, int(ventana_alto / 2 - 300), 365)
+            dibujar_texto("Grupo 3", fuente20, blanco, int(ventana_alto / 2 - 300), 395)
+            dibujar_texto("Profesor: Leonardo Araya Martínez", fuente20, blanco, int(ventana_alto / 2 - 300), 435)
+            dibujar_texto("Versión 1.0", fuente20, blanco, int(ventana_alto / 2 - 300), 465)
+            dibujar_texto("Autores: Kendall Marín Muñoz", fuente20, blanco, int(ventana_alto / 2 - 300), 495)
+            dibujar_texto("                José Andrés Vargas Torres", fuente20, blanco, int(ventana_alto / 2 - 300),
+                          525)
+            dibujar_texto("Autores de módulos modificados:", fuente20, blanco, int(ventana_alto / 2 - 300), 560)
+            dibujar_texto("ChelinTutorials\Youtube", fuente20, blanco, int(ventana_alto / 2 - 300), 585)
+            dibujar_texto("Coding With Russ\Youtube", fuente20, blanco, int(ventana_alto / 2 - 300), 610)
+            dibujar_texto("Clear Code\Youtube", fuente20, blanco, int(ventana_alto / 2 - 300), 640)
+
+            # Asigno un de botone en pantalla para volver a la pantalla de inicio.
+            boton2 = Boton(volver1, volver2, 20, 10)
+            boton2.update(ventana, cursor1)
+
+            # Defino los posibles eventos.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton2.rect):
+                        self.estado = "inicio"
+                        iniciar = False
+
+            pygame.display.update()
+
+    # A continuación defino la pantalla de puntajes. Está en modo beta (no terminado)
+    def puntajes(self):
+        with open('records.txt', 'r') as f:
+            lineas = [linea.split() for linea in f]
+        for linea in lineas:
+            lista = linea
+        lista2 = quick_sort(lista)
+        iniciar = True
+        while iniciar == True:
+            actualizacion.tick(fps)
+
+            # Lo mismo que anteriormente, dibujo fondo, titulo, actualizo posición del mouse y asigno imagenes para botones.
+            cursor1.update()
+            dibujar_fondo3()
+            dibujar_titulo_punt()
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            # Aquí llamo la función draw para escribir en pantalla un pequeño mensaje.
+            dibujar_texto("1. " + lista2[0], fuente40, verde, int(ventana_alto / 2 - 340), 240)
+            dibujar_texto("2. " + lista2[1], fuente40, amarillo_verde, int(ventana_alto / 2 - 340), 320)
+            dibujar_texto("3. " + lista2[2], fuente40, amarillo_verde, int(ventana_alto / 2 - 340), 400)
+            dibujar_texto("4. " + lista2[3], fuente40, amarillo, int(ventana_alto / 2 - 340), 480)
+            dibujar_texto("5. " + lista2[4], fuente40, amarillo, int(ventana_alto / 2 - 340), 560)
+            dibujar_texto("6. " + lista2[5], fuente40, rojo_amarillento, int(ventana_alto / 2 - 340), 640)
+            dibujar_texto("7. " + lista2[6], fuente40, rojo_amarillento, int(ventana_alto / 2 - 340), 720)
+            # Defino el boton para volver a inicio.
+            boton2 = Boton(volver1, volver2, 20, 10)
+            boton2.update(ventana, cursor1)
+
+            # Defino los posibles eventos.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton2.rect):
+                        self.estado = "inicio"
+                        iniciar = False
+
+            pygame.display.update()
+
+    def nombres(self):
+        # A continuación asigno el nombre de jugador como una string vacía, que luego se llenará con la entrada de texto, defino un rectangulo que será el cuadro de mi entrada de texto y una variable llamada
+        # texto_activo que luego me ayudará decidir si puede entrar texto en la entrada de texto o no.
+        nombre_jugador = ""
+        cuadro_entrada = pygame.Rect(227, 210, 140, 32)
+        color = blanco
+        iniciar = True
+        x = 0
+        while iniciar == True:
+            # la siguiente función se encarga de limitar la ventana a una actualización de 60 fps. Recordemos la función Clock()...
+            actualizacion.tick(fps)
+            if x > 23:
+                x = 0
+            x += 1
+            # A continuación llamo las funciones necesarias para dibujar el fondo, dibujar el título de la pantalla, actualizar la posición detectada del mouse y además asigno imagenes a unas variables que luego utilizaré para los botones.
+            cursor1.update()
+            dibujar_fondo_p(x)
+            dibujar_titulo()
+            jugarA = pygame.image.load("img\salir.png")
+            jugarR = pygame.image.load("img\salir.png")
+            jugar1 = pygame.image.load("img\jugarr.png")
+            jugar2 = pygame.image.load("img\jugarr.png")
+            comp1 = pygame.image.load("img\infoa.png")
+            comp2 = pygame.image.load("img\infoa.png")
+            punt1 = pygame.image.load("img\puntajesa.png")
+            punt2 = pygame.image.load("img\puntajesa.png")
+            nivel21 = pygame.image.load("img\pivel22.png")
+            nivel22 = pygame.image.load("img\pivel22.png")
+            nivel31 = pygame.image.load("img\pivel32.png")
+            nivel32 = pygame.image.load("img\pivel32.png")
+
+            # A continuación dibujo en pantalla el cuadrado que me servira como fondo o bordes de la entrada de texto.(En este caso solo serán los bordes)
+            pygame.draw.rect(ventana, color, cuadro_entrada, 2)
+
+            # En las siguientes variables renderizo y dibujo en pantalla el nombre del jugador, conforme este va introduciendolo en la entrada de texto y con cuadro_entrada.w hago que
+            # el cuadro de entrada tenga un tamaño de 150 pixeles, pero que este mismo aumente si el tamaño del nombre del jugador aumenta por encima de los 150 pixeles.
+            texto_superficie = fuente_base.render(nombre_jugador, True, (color))
+            ventana.blit(texto_superficie, (cuadro_entrada.x + 5, cuadro_entrada.y + 5))
+            cuadro_entrada.w = max(150, texto_superficie.get_width() + 10)
+
+            # A continuacion, con la clase Boton asigno varios botones a diferentes variables, para así luego utilizarlos.
+            boton2 = Boton(punt1, punt2, 20, ventana_alto - 150)
+            boton2.update(ventana, cursor1)
+            boton3 = Boton(comp1, comp2, 20, ventana_alto - 75)
+            boton3.update(ventana, cursor1)
+            boton4 = Boton(nivel21, nivel22, 110, ventana_alto - 320)
+            boton4.update(ventana, cursor1)
+            boton5 = Boton(nivel31, nivel32, 350, ventana_alto - 320)
+            boton5.update(ventana, cursor1)
+
+            # La siguiente clase es completamente igual a la de los botones, pero esta solamente es para dibujar el texto "Jugar" sobre el boton para comenzar a jugar, y que este mismo cambie de imagen si
+            # el mouse está sobre el boton para comenzar a jugar.
+            class Jugar(pygame.sprite.Sprite):
+                def __init__(self, imagen1, imagen2, x=ventana_ancho / 2 - 25, y=ventana_alto / 2 - 100):
+                    self.imagen_normal = imagen1
+                    self.imagen_seleccion = imagen2
+                    self.imagen_actual = self.imagen_normal
+                    self.rect = self.imagen_actual.get_rect()
+                    self.rect.left, self.rect.top = (x, y)
+
+                def update(self, ventana):
+                    self.imagen_actual = self.imagen_normal
+                    ventana.blit(self.imagen_actual, self.rect)
+
+            boton0 = Jugar(jugar1, jugar2, ventana_ancho / 2 - 140, 270)
+            boton0.update(ventana)
+            boton1 = Boton(jugarA, jugarR, ventana_ancho / 2 - 140, 250)
+            boton1.update(ventana, cursor1)
+
+            # Defino los posibles eventos y sus consecuencias, por ejemplo defino que si un click del mouse es presionado sobre algún boton, cambie el estado del juego
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton1.rect):
+                        self.estado = "inicio"
+                        iniciar = False
+
+            pygame.display.update()
+
+    def cambiar_menu(self):
+        if self.estado == "inicio":
+            self.inicio()
+        if self.estado == "complementaria":
+            self.complementaria()
+        if self.estado == "puntajes":
+            self.puntajes()
+        if self.estado == "nombres":
+            self.nombres()
