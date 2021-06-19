@@ -1012,3 +1012,221 @@ class Niveles():
                     sys.exit()
 
             pygame.display.update()
+
+    # Hacemos algo muy similar para los siguiente niveles
+    def Nivel2(self):
+        jugador1.rect.center = [int(ventana_ancho / 2), ventana_alto - 100]
+        meteoros_group.empty()
+
+        class Meteoros(pygame.sprite.Sprite):
+            def __init__(self, x, y, num):
+                pygame.sprite.Sprite.__init__(self)
+                self.image = pygame.image.load("img/Meteoros/meteoro" + str(num) + ".png")
+                self.rect = self.image.get_rect()
+                self.rect.center = [x, y]
+                self.contador_movimiento_x = 0
+                self.velocidad_movimiento_x = random.choice((-1, 1))
+                self.contador_movimiento_y = 0
+                self.velocidad_movimiento_y = random.randint(1, 5)
+                self.contador_entrada = 65
+                # Creo una máscara de los pixeles del enemigo
+                self.mask = pygame.mask.from_surface(self.image)
+
+                # Defino el movimiento del enemigo 2
+
+            def update(self):
+                # Self.contador se encarga de hacer la cuenta abajo para que el enemigo dispare
+                self.rect.x += self.velocidad_movimiento_x
+                self.contador_movimiento_x += 1
+                if self.rect.right >= ventana_ancho or self.rect.left <= 0:
+                    colision(random.randint(0, 3))
+                    if self.rect.left == 0:
+                        self.velocidad_movimiento_x = random.randint(-5, -1)
+                        self.velocidad_movimiento_y *= random.choice((-1, 1))
+                    elif self.rect.right == ventana_ancho:
+                        self.velocidad_movimiento_x = random.randint(1, 5)
+                        self.velocidad_movimiento_y *= random.choice((-1, 1))
+                    self.velocidad_movimiento_x *= -1
+                    self.contador_movimiento_x *= self.velocidad_movimiento_x
+                self.rect.y += self.velocidad_movimiento_y
+                self.contador_movimiento_y += 1
+                self.contador_entrada -= 1
+                if self.contador_entrada > 0:
+                    self.rect.y += 1
+                elif self.rect.bottom >= (ventana_alto - 50) or self.rect.top <= 0:
+                    colision(random.randint(0, 3))
+                    if self.rect.top <= 0 == 0:
+                        self.velocidad_movimiento_y = random.randint(-5, -1)
+                        self.velocidad_movimiento_x *= random.choice((-1, 1))
+                    elif self.rect.bottom >= (ventana_alto - 50):
+                        self.velocidad_movimiento_y = random.randint(1, 5)
+                        self.velocidad_movimiento_x *= random.choice((-1, 1))
+                    self.velocidad_movimiento_y *= -1
+                    self.contador_movimiento_y *= self.velocidad_movimiento_y
+
+                if pygame.sprite.spritecollide(self, jugador_group1, False, pygame.sprite.collide_mask):
+                    self.kill()
+                    # Reducir vida restante del jugador1
+                    contacto2_efecto.play()
+                    jugador1.vida_restante -= 1
+                    jugador1.score -= 10
+                    explosion = Explosion(self.rect.centerx, self.rect.centery)
+                    explosion_group.add(explosion)
+
+        # Añado los meteoros
+        for meteoro in range(0, 8):
+            meteoro = Meteoros(random.randint(45, 490), -66, random.randint(1, 7))
+            meteoros_group.add(meteoro)
+
+        # Defino algunas variables necesarias para la cuenta atras y el Tiempo
+        cuenta_atras = 3
+        ultimo_contador = pygame.time.get_ticks()
+        fin_del_juego = 0  # donde 0 es que el juego aun no ha terminado, 1 es que el jugador1 ganó y -1 que el jugador1 perdió.
+        tiempo = -1
+        cuenta_tiempo1 = 0
+        # Las siguientes variables se encargaran de limitar el disparo del jugador para que este no pueda presionar rapidamente el boton de disparo y acabar rápidamente con el enemigo.
+        tiempo_corrido = 0
+        # Añado los elementos a la pantalla.
+        jugador_group1.add(jugador1)
+        corriendo = True
+        x = 0
+        # Defino el enemigo 2 de manera similar a la del enemigo 1, pero este tiene un nuevo contador que luego me ayudara a definir su patrón de disparo.
+
+        while corriendo:
+            actualizacion.tick(fps)
+
+            # Aquí el tiempo corrido comienza a aumentar, de manera que cada que llegue a ser mayor al tiempo_desde_disparo + tiempo_entre_disparo el jugador podra disparar.
+            tiempo_corrido += 1
+
+            # Dibujo el fondo, actualizo el mouse y defino unas imagenes y sus botones.
+            dibujar_lvl2(x)
+            cursor1.update()
+            volver1 = pygame.image.load("img\home1.png")
+            volver2 = pygame.image.load("img\home2.png")
+            boton1 = Boton(volver1, volver2, 20, 10)
+            boton1.update(ventana, cursor1)
+            # Aquí defino que el juego comience.
+            if cuenta_atras == 0:
+                # Defino el estado del juego donde 0 es que el juego aun no ha terminado, 1 es que el jugador1 ganó y -1 que el jugador1 perdió.
+                if fin_del_juego == 0:
+                    nivel_2.audio_set_volume(50)
+                    nivel_2.play()
+                    if x > 48:
+                        x = 0
+                    x += 1
+                    # Defino si el enemigo 1 puede causar daño a jugador, si no hago esto, al entrar en contacto con el enemigo este mataría el jugador al instante.
+                    cuenta_tiempo2 = pygame.time.get_ticks()
+                    if cuenta_tiempo2 - cuenta_tiempo1 > 995:
+                        cuenta_tiempo1 = cuenta_tiempo2
+                        tiempo += 1
+                        if tiempo > 0:
+                            jugador1.score += 3
+
+                    # Dibujo el tiempo transcurrido.
+                    dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
+                    fin_del_juego = jugador1.update()
+                    # Defino el estado del enemigo. Si tiene vida que se actualice, si no entonces el jugador ganó. (fin_del juego = 1)
+
+                    if tiempo >= 60:
+                        exp = Explosion2(meteoro.rect.centerx, meteoro.rect.centery)
+                        meteoros_group.empty()
+                        explosion_group.add(exp)
+                        explosion2_efecto.play()
+                        jugador1.kill()
+                        fin_del_juego = 1
+                    else:
+                        pass
+
+                    # Actualizo y dibujo los protectiles
+
+                    proyectil_meteoros_group.update()
+                    proyectil_meteoros_group.draw(ventana)
+                    meteoros_group.update()
+
+
+                # Defino las consecuencias de que el jugador gane o pierda.
+                else:
+                    nivel_2.stop()
+                    if fin_del_juego == -1:
+                        file = open("records.txt", "a")
+                        file.write(str(jugador1.score) + " ")
+                        file.close()
+                        with open('records.txt', 'r') as f:
+                            lineas = [linea.split() for linea in f]
+                        for linea in lineas:
+                            lista = linea
+                        lista2 = quick_sort_record(lista)
+                        estado_juego.estado = "salir"
+                        for i in range(0, 7):
+                            oldscore = lista2[i]
+                            if jugador1.score > oldscore:
+                                estado_juego.estado = "nuevo_record"
+                                jugador1.vida_restante += jugador1.vida_inicio - jugador1.vida_restante
+                                jugador1.kill()
+                                corriendo = False
+                            elif jugador1.score == oldscore:
+                                pass
+                            else:
+                                jugador1.posición += 1
+                        jugador1.vida_restante += jugador1.vida_inicio - jugador1.vida_restante
+                        jugador1.kill()
+                        corriendo = False
+                    # Si el jugador gana pasa al nivel2
+                    if fin_del_juego == 1:
+                        jugador1.vida_restante += jugador1.vida_inicio - jugador1.vida_restante
+                        estado_juego.estado = "Nivel3"
+                        # sys.executable(Puntaje_por_partida.py)
+                        proyectil_meteoros_group.empty()
+                        meteoros_group.empty()
+                        jugador_group1.empty()
+                        corriendo = False
+
+            # Defino los eventos necesarios para el juego.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    file = open("records.txt", "a")
+                    file.write(str(jugador1.score) + " ")
+                    file.close()
+                    pygame.quit()
+                    sys.exit()
+                # Defino un evento para accionar el boton "home".
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton1.rect):
+                        file = open("records.txt", "a")
+                        file.write(str(jugador1.score) + " ")
+                        file.close()
+                        jugador1.score = 0
+                        jugador1.vida_restante = jugador1.vida_inicio
+                        jugador1.posición = 1
+                        jugador_group1.empty()
+                        meteoros_group.empty()
+                        estado_juego.estado = "Nivel1"
+                        nivel_2.stop()
+                        corriendo = False
+                        return main(False)
+
+            # Aquí defino que el juego no comience hasta que cuenta_atras sea == 0.
+            if cuenta_atras > 0:
+                dibujar_texto("¡PREPARATE!", fuente40, blanco, int(ventana_alto / 2 - 215), 350)
+                dibujar_texto(str(cuenta_atras), fuente40, blanco, int(ventana_alto / 2 - 100), 400)
+                contador = pygame.time.get_ticks()
+                if contador - ultimo_contador > 1000:
+                    cuenta_atras -= 1
+                    ultimo_contador = contador
+
+            # Actualizar los diferentes objetos en pantalla
+            explosion_group.update()
+
+            # Dibujar los diferentes grupos de objetos
+            jugador_group1.draw(ventana)
+            meteoros_group.draw(ventana)
+            explosion_group.draw(ventana)
+
+            # Defino el evento necesario para cerrar el juego
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            pygame.display.update()
