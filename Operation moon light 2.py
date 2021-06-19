@@ -50,7 +50,7 @@ ventana = pygame.display.set_mode((ventana_ancho, ventana_alto))
 # Con pygame.display.set_caption le asigno un nombre a la barra superior de la ventana anteriormente creada.
 pygame.display.set_caption("Operation Moon Light")
 
-#Kendall Imagenes
+#Kendall Imágenes
 # A las siguientes variables les asigné una imagen la cual luego voy a estar utilizando para pintar el fondo de las diferentes pantallas.
 fondo = pygame.image.load("img\pondo.jpg")
 fondo_complementaria = pygame.image.load("img\pondo_comp.jpg")
