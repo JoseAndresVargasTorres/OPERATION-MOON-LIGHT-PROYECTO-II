@@ -165,6 +165,7 @@ class Jugador1(pygame.sprite.Sprite):
             self.rect.y -= velocidad
         if tecla[pygame.K_s] and self.rect.bottom < ventana_alto - 50:
             self.rect.y += velocidad
+
         # Creo una máscara de los pixeles de la nave, esta mascara me crea una forma igual a la imagen de mi nave, forma que luego utilizaré para las colisiones, de esta manera aunque mi imagen tenga unas dimensiones
         # si la bala enemiga no entra en contacto con los pixeles pintados de la imagen, esta no causa daño, así logro que la bala de verdad colisione con mi nave cuando debe.
         self.mask = pygame.mask.from_surface(self.image)
@@ -172,8 +173,8 @@ class Jugador1(pygame.sprite.Sprite):
         # A continuación defino la vida del jugador #1 de panera que si esta es mayor a 0 aparezca en pantalla y retorno que fin del juego = 0 (o sea que el juego aún no termina), si no,
         # en el momento que la vida sea menor o igual a 0 añado una animación de explosión a mi nave, reproduzco un sonido de explosión y retorno fin del juego = -1, lo que quiere decir que perdió.
         if self.vida_restante > 0:
-            dibujar_texto("Vida: " + str(self.vida_restante), fuente30, verde, int(ventana_alto / 2 - 40), int(760))
-            dibujar_texto(str(self.nombre), fuente30, verde, int(ventana_alto / 2 - 210), int(760))
+            dibujar_texto("Vida: " + str(self.vida_restante), fuente30, verde, int(ventana_alto / 2 - 70), int(760))
+            dibujar_texto(str(self.nombre), fuente30, verde, int(ventana_alto / 2 - 230), int(760))
         elif self.vida_restante <= 0:
             exp = Explosion2(self.rect.centerx, self.rect.centery)
             explosion_group.add(exp)
@@ -278,3 +279,186 @@ class Boton(pygame.sprite.Sprite):
         else:
             self.imagen_actual = self.imagen_normal
         ventana.blit(self.imagen_actual, self.rect)
+
+
+# A continuación creo una clase llamada cursor, esta clase se encarga de crear un rectangulo el cual sigue al mouse. Este rectangulo luego me servirá para llevar a cabo las colisiones del mouse.
+class Cursor(pygame.Rect):
+    def __init__(self):
+        pygame.Rect.__init__(self, 0, 0, 1, 1)
+
+    def update(self):
+        self.left, self.top = pygame.mouse.get_pos()
+
+
+cursor1 = Cursor()
+
+# Defino los diferentes grupos de objetos que se pintaran en pantalla.
+jugador_group1 = pygame.sprite.Group()
+
+meteoros_group = pygame.sprite.Group()
+
+proyectil_meteoros_group = pygame.sprite.Group()
+
+explosion_group = pygame.sprite.Group()
+
+jugador1 = Jugador1(int(ventana_ancho / 2), ventana_alto - 100, 3)
+
+
+# Defino una clase que se encarga de reproducir el nivel selecionado y de cambiar de nivel.
+class Menus():
+    def __init__(self):
+        # Primero defino que esta función selecionadora de nivel comience por la pantalla inicio.
+        self.estado = "inicio"
+
+    # Cuando la función que selecióna el nivel o la pantalla esta "x" estado, reproduce el contenido de la función con dicho nombre
+    # A continuación defino la pantalla de inicio.
+
+    def inicio(self):
+
+        x = 0
+        # A continuación asigno el nombre de jugador como una string vacía, que luego se llenará con la entrada de texto, defino un rectangulo que será el cuadro de mi entrada de texto y una variable llamada
+        # texto_activo que luego me ayudará decidir si puede entrar texto en la entrada de texto o no.
+        nombre_jugador = ""
+        cuadro_entrada = pygame.Rect(227, 210, 140, 32)
+        texto_activo = False
+        color = blanco
+
+        iniciar = True
+
+        while iniciar:
+            menu_principal.audio_set_volume(50)
+            menu_principal.play()
+            # la siguiente función se encarga de limitar la ventana a una actualización de 60 fps. Recordemos la función Clock()...
+            actualizacion.tick(fps)
+            if x > 23:
+                x = 0
+            x += 1
+            # A continuación llamo las funciones necesarias para dibujar el fondo, dibujar el título de la pantalla, actualizar la posición detectada del mouse y además asigno imagenes a unas variables que luego utilizaré para los botones.
+            cursor1.update()
+            dibujar_fondo_p(x)
+            dibujar_titulo()
+            jugarA = pygame.image.load("img\start2.png")
+            jugarR = pygame.image.load("img\start.png")
+            jugar1 = pygame.image.load("img\jugarr.png")
+            jugar2 = pygame.image.load("img\jugarv.png")
+            comp1 = pygame.image.load("img\infoa.png")
+            comp2 = pygame.image.load("img\infop.png")
+            punt1 = pygame.image.load("img\puntajesa.png")
+            punt2 = pygame.image.load("img\puntajesp.png")
+            nivel21 = pygame.image.load("img\pivel22.png")
+            nivel22 = pygame.image.load("img\pivel21.png")
+            nivel31 = pygame.image.load("img\pivel32.png")
+            nivel32 = pygame.image.load("img\pivel31.png")
+
+            # A continuación dibujo en pantalla el cuadrado que me servira como fondo o bordes de la entrada de texto.(En este caso solo serán los bordes)
+            pygame.draw.rect(ventana, color, cuadro_entrada, 2)
+
+            # En las siguientes variables renderizo y dibujo en pantalla el nombre del jugador, conforme este va introduciendolo en la entrada de texto y con cuadro_entrada.w hago que
+            # el cuadro de entrada tenga un tamaño de 150 pixeles, pero que este mismo aumente si el tamaño del nombre del jugador aumenta por encima de los 150 pixeles.
+            texto_superficie = fuente_base.render(nombre_jugador, True, (color))
+            ventana.blit(texto_superficie, (cuadro_entrada.x + 5, cuadro_entrada.y + 5))
+            cuadro_entrada.w = max(150, texto_superficie.get_width() + 10)
+
+            # A continuacion, con la clase Boton asigno varios botones a diferentes variables, para así luego utilizarlos.
+            boton1 = Boton(jugarA, jugarR, ventana_ancho / 2 - 25, 360)
+            boton1.update(ventana, cursor1)
+            boton2 = Boton(punt1, punt2, 20, ventana_alto - 150)
+            boton2.update(ventana, cursor1)
+            boton3 = Boton(comp1, comp2, 20, ventana_alto - 75)
+            boton3.update(ventana, cursor1)
+            boton4 = Boton(nivel21, nivel22, 110, ventana_alto - 320)
+            boton4.update(ventana, cursor1)
+            boton5 = Boton(nivel31, nivel32, 350, ventana_alto - 320)
+            boton5.update(ventana, cursor1)
+
+            # La siguiente clase es completamente igual a la de los botones, pero esta solamente es para dibujar el texto "Jugar" sobre el boton para comenzar a jugar, y que este mismo cambie de imagen si
+            # el mouse está sobre el boton para comenzar a jugar.
+            class Jugar(pygame.sprite.Sprite):
+                def __init__(self, imagen1, imagen2, x=ventana_ancho / 2 - 25, y=ventana_alto / 2 - 100):
+                    self.imagen_normal = imagen1
+                    self.imagen_seleccion = imagen2
+                    self.imagen_actual = self.imagen_normal
+                    self.rect = self.imagen_actual.get_rect()
+                    self.rect.left, self.rect.top = (x, y)
+
+                def update(self, ventana, cursor):
+
+                    if cursor.colliderect(boton1.rect):
+                        self.imagen_actual = self.imagen_seleccion
+                    else:
+                        self.imagen_actual = self.imagen_normal
+                    ventana.blit(self.imagen_actual, self.rect)
+
+            boton0 = Jugar(jugar1, jugar2, ventana_ancho / 2 - 140, 270)
+            boton0.update(ventana, cursor1)
+
+            # Defino los posibles eventos y sus consecuencias, por ejemplo defino que si un click del mouse es presionado sobre algún boton, cambie el estado del juego
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cursor1.colliderect(boton1.rect):
+                        if nombre_jugador != "":
+                            jugador1.nombre = nombre_jugador
+                            file = open("records.txt", "a")
+                            file.write(" " + nombre_jugador + ":")
+                            file.close()
+                            iniciar = False
+                            return main(True)
+                        else:
+                            self.estado = "nombres"
+                            iniciar = False
+
+                    if cursor1.colliderect(boton4.rect):
+                        if nombre_jugador != "":
+                            jugador1.nombre = nombre_jugador
+                            file = open("records.txt", "a")
+                            file.write(" " + nombre_jugador + ":")
+                            file.close()
+                            estado_juego.estado = "Nivel2"
+                            menu_principal.stop()
+                            iniciar = False
+                            return main(True)
+                        else:
+                            self.estado = "nombres"
+                            iniciar = False
+                    if cursor1.colliderect(boton5.rect):
+                        if nombre_jugador != "":
+                            jugador1.nombre = nombre_jugador
+                            file = open("records.txt", "a")
+                            file.write(" " + nombre_jugador + ":")
+                            file.close()
+                            estado_juego.estado = "Nivel3"
+                            menu_principal.stop()
+                            iniciar = False
+                            return main(True)
+                        else:
+                            self.estado = "nombres"
+                            iniciar = False
+                    elif cursor1.colliderect(boton2.rect):
+                        self.estado = "puntajes"
+                        iniciar = False
+                    elif cursor1.colliderect(boton3.rect):
+                        self.estado = "complementaria"
+                        iniciar = False
+
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    if cuadro_entrada.collidepoint(evento.pos):
+                        texto_activo = True
+                    else:
+                        texto_activo = False
+
+                if evento.type == pygame.KEYDOWN:
+                    if texto_activo == True:
+                        if evento.key == pygame.K_BACKSPACE:
+                            nombre_jugador = nombre_jugador[:-1]
+                        elif evento.key == pygame.K_RETURN or evento.key == pygame.K_SPACE or evento.key == pygame.K_KP_ENTER or evento.key == pygame.K_KP_0 or evento.key == pygame.K_KP_1 or evento.key == pygame.K_KP_2 or evento.key == pygame.K_KP_3 or evento.key == pygame.K_KP_4 or evento.key == pygame.K_KP_5 or evento.key == pygame.K_KP_6 or evento.key == pygame.K_KP_7 or evento.key == pygame.K_KP_8 or evento.key == pygame.K_KP_9 or evento.key == pygame.K_KP_DIVIDE or evento.key == pygame.K_KP_EQUALS or evento.key == pygame.K_KP_MINUS or evento.key == pygame.K_KP_MULTIPLY or evento.key == pygame.K_KP_PERIOD or evento.key == pygame.K_KP_PLUS:
+                            pass
+                        else:
+                            nombre_jugador += evento.unicode
+            if texto_activo:
+                color = verde
+            else:
+                color = rojo
+            pygame.display.update()
