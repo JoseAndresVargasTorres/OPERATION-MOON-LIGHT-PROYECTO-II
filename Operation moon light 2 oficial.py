@@ -643,8 +643,9 @@ class Menus():
         if self.estado == "nombres":
             self.nombres()
 
+        # Defino una clase que se encarga de reproducir el nivel selecionado y de cambiar de nivel.
 
-# Defino una clase que se encarga de reproducir el nivel selecionado y de cambiar de nivel.
+
 class Niveles():
     def __init__(self):
         # Primero defino que esta función selecionadora de nivel comience por la pantalla inicio.
@@ -898,7 +899,7 @@ class Niveles():
                     # Dibujo el tiempo transcurrido.
                     dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
                     # dibujo el nombre del jugador
-                    dibujar_texto("Score: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 65), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
                     # with open(Menus(self)) as v:
                     # dibujar_texto("" + str(nombre_jugador),fuente30,verde,int(ventana_alto/2 -350,790))
                     fin_del_juego = jugador1.update()
@@ -1341,7 +1342,7 @@ class Niveles():
 
                     # Dibujo el tiempo transcurrido.
                     dibujar_texto("Tiempo: " + str(tiempo), fuente30, verde, int(20), 760)
-                    dibujar_texto("Score: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 65), 760)
+                    dibujar_texto("Puntaje: " + str(jugador1.score), fuente30, verde, int(ventana_alto / 2 + 25), 760)
                     fin_del_juego = jugador1.update()
                     # Defino el estado del enemigo. Si tiene vida que se actualice, si no entonces el jugador ganó. (fin_del juego = 1)
 
@@ -1465,6 +1466,21 @@ class Niveles():
                     sys.exit()
 
             pygame.display.update()
+
+    # A continuación defino una función que es la que se encarga de cambiar el nivel en pantalla, dependiendo del nivel o pantalla retornado.
+    def cambiar_nivel(self):
+        if self.estado == "Nivel1":
+            self.Nivel1()
+        if self.estado == "Nivel2":
+            self.Nivel2()
+        if self.estado == "Nivel3":
+            self.Nivel3()
+        if self.estado == "salir":
+            self.salir()
+        if self.estado == "ganaste":
+            self.ganaste()
+        if self.estado == "nuevo_record":
+            self.nuevo_record()
 
 
 
