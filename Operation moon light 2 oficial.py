@@ -1492,3 +1492,10 @@ while corriendo:
     def main(niveles):
         if niveles == False:
             estado_menus.cambiar_menu()
+
+            # Mientras la aplicación este en ejecución ejecuto el estado en el que se encuentre el selecionador de estado.
+        else:
+            estado_juego.cambiar_nivel()
+
+
+    main(False)
