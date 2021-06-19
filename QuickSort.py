@@ -73,7 +73,7 @@ def quick_sort_record_aux(lista):
 
     return quick_sort_record_aux(menores) + [pivote] + quick_sort_record_aux(mayores)
 
-#Fin
+#Final
 
 
 
